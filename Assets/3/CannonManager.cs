@@ -6,17 +6,41 @@ public class CannonManager : MonoBehaviour
 {
     public Transform[] CannonSpawnPoints;
     public GameObject CannonballPrefab;
+    public List<GameObject> CannonballPool;
+
+
 
     private void Start()
     {
-        InvokeRepeating("Shoot", 0.25f, 1f);
+        for (int i = 0; i < CannonSpawnPoints.Length; i++)
+        {
+            GameObject Cannonball = Instantiate(CannonballPrefab, CannonSpawnPoints[i]);
+
+            Cannonball.SetActive(false);
+            CannonballPool.Add(Cannonball);
+
+        }
     }
 
-    private void Shoot()
+    private void Update()
+    {
+        InvokeRepeating("RequestCannonball", 0.25f, 1f);
+
+        //RequestCannonball();
+
+    }
+
+    public void  RequestCannonball()
     {
         for (int i = 0; i < CannonSpawnPoints.Length; i++)
         {
-            Instantiate(CannonballPrefab, CannonSpawnPoints[i]);
+            if (CannonballPool[i].activeSelf == false)
+            {
+                CannonballPool[i].SetActive(true);
+            }
         }
+
+
     }
+
 }

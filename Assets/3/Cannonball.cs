@@ -14,6 +14,8 @@ public class Cannonball : MonoBehaviour
     private void Start()
     {
         startTime = Time.time;
+
+        Invoke("Hide", 2);
     }
 
     private void FixedUpdate()
@@ -32,5 +34,11 @@ public class Cannonball : MonoBehaviour
         {
             t.localPosition = new Vector3(t.localPosition.x, t.localPosition.y + velocityY, t.localPosition.z + velocityZ);
         }
+    }
+    void Hide()
+    {
+        //Debug.Log("hide from start");
+        this.gameObject.SetActive(false);
+        //this.transform.parent = ;
     }
 }
