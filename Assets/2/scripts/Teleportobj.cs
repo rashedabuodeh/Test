@@ -11,12 +11,12 @@ public class Teleportobj : MonoBehaviour
         Allclear = true;
     }
 
-
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-       Debug.Log("col");
-       Allclear = false;
+
+        Debug.Log("col");
+        Allclear = false;
         gameObject.SetActive(false);
-      //  Destroy(gameObject);
     }
+
 }

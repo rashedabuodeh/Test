@@ -5,59 +5,82 @@ using UnityEngine;
 public class RaftMovement : MonoBehaviour
 {
 	public float Speed = 3.0f;
-	public int rotationspeed = 150;
+	public float angel = 90, rayrange = 4;
+	public int numberofrays = 30;
 	private Vector3 startPos;
-	private Vector3 endPos;
+	public Vector3 endPos;
+
+
 
 	private void Update()
 	{
 		Vector3 dir = (endPos - transform.position).normalized;
-		transform.position = transform.position + dir * Time.deltaTime * Speed;
-		transform.Rotate(0,Time.deltaTime * rotationspeed,0);
-		
+
+		transform.position = transform.position + dir * Time.deltaTime *3* Speed;
+
 		// if raft is close to end point, reset
-		if (Vector3.Distance(endPos, transform.position) <= (dir * Time.deltaTime * Speed).magnitude)
+		if (Vector3.Distance(endPos, transform.position) <= (dir * Time.deltaTime *3* Speed).magnitude)
 		{
-			ResetRaft();
+			ResetCube();
+		}
+
+
+		//if (transform.position.z > -15 && transform.position.z<14 )
+		//	transform.rotation= Quaternion.Slerp(transform.rotation, Quaternion.LookRotation( dir), Time.deltaTime * 50f);
+
+
+		// check for surroundings
+		var delatpos = Vector3.zero;
+		for (int i = 0; i < numberofrays; i++)
+		{
+			var rotation = this.transform.rotation;
+			var rotationmod = Quaternion.AngleAxis((i / ((float)numberofrays - 1)) * angel * 4 - angel, this.transform.up);
+			var direction = rotation * rotationmod * Vector3.forward ;
+
+			var ray = new Ray(this.transform.position, direction*6);
+			RaycastHit hitinfo;
+			if (Physics.Raycast(ray, out hitinfo, rayrange))
+			{
+				delatpos -= (1.0f / numberofrays) *Speed * direction*6;
+			}
+			else
+			{
+				delatpos += (1.0f / numberofrays) * Speed * direction*6;
+			}
+		}
+		//this.transform.position += delatpos * Time.deltaTime;
+		transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(this.transform.position + delatpos), Time.deltaTime * 50f);
+
+		this.transform.position = Vector3.Lerp(this.transform.position, this.transform.position + delatpos , 1 * Time.deltaTime);
+
+	}
+	private void OnDrawGizmos()
+	{
+		for (int i = 0; i < numberofrays; i++)
+		{ 
+			var rotation = this.transform.rotation;
+			var rotationmod = Quaternion.AngleAxis((i / ((float)numberofrays - 1)) * angel * 4 - angel, this.transform.up);
+			var direction = rotation * rotationmod * Vector3.forward ;
+			Gizmos.DrawRay(this.transform.position, direction * 5f);
+
 		}
 	}
-
-	private void ResetRaft()
+	private void ResetCube()
 	{
 		startPos = new Vector3(Random.Range(-15f, 15f), 0.0f, -15f);
 		endPos = startPos;
 		endPos.x = Random.Range(-15f, 15f);
 		endPos.z *= -1.0f;
 		transform.position = startPos;
-		transform.rotation = Quaternion.identity;
-
 	}
+
 	private void Start()
 	{
-		ResetRaft();
+		ResetCube();
 	}
-
 	private void OnTriggerEnter(Collider other)
 	{
-		//float x, y, radius = 0.5000001f;
-		float currentAngle = transform.rotation.eulerAngles.y;
-		Debug.Log(currentAngle);
-
-		/////////////// worldspace postion
-
-		/*
-		currentAngle += Time.deltaTime * ((Mathf.PI * 2));
-		x = radius * Mathf.Cos(currentAngle);
-		y = radius * Mathf.Sin(currentAngle);
-		transform.position = new Vector3(x, y, transform.position.z);
-
-		 Debug.Log(currentAngle);
-
-		switch (direction)
-		{
-		case "left":
-		  break;
-		}*/
+		//Debug.Log("Collision");
 
 	}
 

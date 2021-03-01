@@ -8,12 +8,11 @@ public class spawningClouds : MonoBehaviour
     public GameObject CloudPrefab, Teleport; //reference for your object
     GameObject TeleportPrefab;
     public int myCount = 5, j = 0; //count created objects
-    public Sprite[] cloudsprite;
+   // public Sprite[] cloudsprite;
 
   private void Awake()
     {
-        TeleportPrefab = Instantiate(Teleport, transform.parent);
-        TeleportPrefab.SetActive(false);
+      //  TeleportPrefab.SetActive(false);
 
     }
 
@@ -22,20 +21,22 @@ public class spawningClouds : MonoBehaviour
 
         while (j < myCount)
         {
-            Vector3 randPos = (new Vector3(Random.Range(-800, 800), Random.Range(-800f, 800f),0));
-           // TeleportPrefab = Instantiate(Teleport, transform.parent);
 
-            TeleportPrefab.SetActive(true);
-            TeleportPrefab.transform.localPosition = randPos;
+            Vector3 randPos = (new Vector3(Random.Range(7, 300), Random.Range(10f, 150),0));
+            // TeleportPrefab = Instantiate(Teleport, transform.parent);
+            TeleportPrefab = Instantiate(Teleport, randPos,Quaternion.identity, transform);
+
+           // TeleportPrefab.SetActive(true);
+           // TeleportPrefab.transform.localPosition = randPos;
           
             StartCoroutine(wait());
 
             if (Teleportobj.Allclear )
             {
                 // all clear for clouds to appear!
-                var Cloud = Instantiate(CloudPrefab,transform.parent);
+                var Cloud = Instantiate(CloudPrefab,transform);
                 Cloud.transform.localPosition = randPos;
-                Cloud.GetComponent<Image>().sprite = cloudsprite[Random.Range(0,7)];
+               // Cloud.GetComponent<Image>().sprite = cloudsprite[Random.Range(0,7)];
                 j++;
             }
            // Destroy(TeleportPrefab);

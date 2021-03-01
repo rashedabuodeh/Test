@@ -6,41 +6,45 @@ public class CannonManager : MonoBehaviour
 {
     public Transform[] CannonSpawnPoints;
     public GameObject CannonballPrefab;
-    public List<GameObject> CannonballPool;
-
-
+    public List<GameObject> CannonballList;
 
     private void Start()
     {
         for (int i = 0; i < CannonSpawnPoints.Length; i++)
         {
-            GameObject Cannonball = Instantiate(CannonballPrefab, CannonSpawnPoints[i]);
-
-            Cannonball.SetActive(false);
-            CannonballPool.Add(Cannonball);
-
+            GameObject Cannonball =Instantiate(CannonballPrefab, CannonSpawnPoints[i]);
+            CannonballList.Add(Cannonball);
+            CannonballList[i].SetActive(false);
         }
+
+
+        InvokeRepeating("Shoot1", 1f, 1f);
+
+        InvokeRepeating("Shoot2", 2f, 1f);
+
+        InvokeRepeating("Shoot3", 3f, 1f);
+
     }
 
-    private void Update()
+    private void Shoot1()
     {
-        InvokeRepeating("RequestCannonball", 0.25f, 1f);
-
-        //RequestCannonball();
-
-    }
-
-    public void  RequestCannonball()
-    {
-        for (int i = 0; i < CannonSpawnPoints.Length; i++)
+        for (int i = 0; i < 2; i++)
         {
-            if (CannonballPool[i].activeSelf == false)
-            {
-                CannonballPool[i].SetActive(true);
-            }
+            CannonballList[i].SetActive(true);
         }
-
-
     }
-
+    private void Shoot2()
+    {
+        for (int i = 2; i < 4; i++)
+        {
+            CannonballList[i].SetActive(true);
+        }
+    }
+    private void Shoot3()
+    {
+        for (int i = 4; i < 6; i++)
+        {
+            CannonballList[i].SetActive(true);
+        }
+    }
 }
